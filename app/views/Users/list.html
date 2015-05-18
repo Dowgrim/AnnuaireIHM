@@ -1,0 +1,63 @@
+<div ng-controller="UsersCtrl">
+<!--  <div class="navbar-text">Recherche</div>-->
+  <div class="input-group">
+    <input ng-model="userSearch" class="form-control" placeholder="Recherche" name="srch-term" id="srch-term" type="search">
+    <div ng-show="userSearch" class="input-group-btn">
+      <a class="btn btn-default btn-social" ng-click="userSearch=''"><i class="text-danger glyphicon glyphicon-remove"/></a>
+    </div>
+    <div class="input-group-btn">
+      <button disabled="disabled" class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+    </div>
+  </div>
+  <br/>
+
+  <div>
+    <form class="form-inline">
+      <div class="form-group">
+        <input ng-model="user.surname" type="text" size="10" class="form-control" id="surname" placeholder="Prénom">
+      </div>
+      <div class="form-group">
+        <input ng-model="user.name" type="text" size="10" class="form-control" id="name" placeholder="Nom">
+      </div>
+      <div class="form-group">
+        <input ng-model="user.email" type="email" class="form-control" id="email" placeholder="@">
+      </div>
+      <div class="form-group">
+        <input ng-model="user.website" type="text" size="10" class="form-control" id="website" placeholder="http://">
+      </div>
+      <button ng-click="addUser(user); user=null;" class="btn btn-default">Ajouter</button>
+    </form>
+  </div>
+
+
+<h3>Liste des utilisateurs:</h3>
+<div>
+  <ul class="nav nav-pills nav-stacked col-xs-5">
+    <li><bold>PRENOM, NOM</bold></li>
+    <li ng-repeat="user in users | filter:userSearch" ng-class="{ active:isSet(user) }"><a ng-click="setShow(user)"> {{user.surname}}, {{user.name}}</a></li>
+  </ul>
+
+  <div id="userShow" class="col-xs-offset-2 col-xs-6" ng-show="showUser">
+    <div>
+      <p><h3>Id : {{showUser.id}}</h3></p>
+      <p>Nom: <input ng-model="showUser.name"></p>
+      <p>Prénom: <input ng-model="showUser.surname"></p>
+      <p>E-mail: <input ng-model="showUser.email"></p>
+      <p>Site: <input ng-model="showUser.website"></p>
+      <p>Projets:<ol>
+      <li ng-repeat="project in showUserProject">
+        <span ng-repeat="role in showUserRole | filter:{'ProjectId':project.id}">{{role.name == null ? "undefined" : role.name}} <B>dans le projet</B> {{project.title == null ? "undefined" : project.title}}
+        <a ng-click="deleteRole(role)" class="btn btn-danger">X</a></span>
+      </li>
+      <li>
+        <input ng-model="newRole.name"><B> dans le projet </B><select ng-model="newRole.ProjectId" ng-options="project.id as project.title for project in projects"></select> <a ng-click="newRole.UserId = showUser.id; addRole(newRole); newRole=null;" class="btn btn-success"><bold>+</bold></a>
+      </li>
+       </ol></p>
+      <p>Crée le: {{showUser.createdAt}}</p>
+      <p>Modifié le: {{showUser.updatedAt}}</p>
+      <a ng-click="updateUser(showUser)" class="btn btn-success">Modifer</a>
+      <a ng-click="deleteUser(showUser.id)" class="btn btn-danger">Supprimer</a>
+    </div>
+  </div>
+</div>
+</div>
